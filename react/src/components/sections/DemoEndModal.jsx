@@ -19,9 +19,14 @@ const DemoEndModal = ({ isOpen, onClose }) => {
 					[Close_X]
 				</button>
 
-				<div className="flex gap-2 justify-center">
-					<span className="w-2 h-2 animate-ping bg-primary" />
-					<p className="font-mono text-primary text-[10px] tracking-[0.3em]">
+				<div className="flex gap-3 justify-center items-center">
+					{/* Wrap the ping in a relative container so it doesn't shift the text */}
+					<div className="flex relative justify-center items-center w-2 h-2">
+						<span className="inline-flex absolute w-full h-full rounded-full opacity-75 animate-ping bg-primary" />
+						<span className="inline-flex relative w-1.5 h-1.5 rounded-full bg-primary" />
+					</div>
+
+					<p className="font-mono leading-none text-primary text-[10px] tracking-[0.3em]">
 						DIAGNOSTIC_REPORT //
 					</p>
 				</div>
