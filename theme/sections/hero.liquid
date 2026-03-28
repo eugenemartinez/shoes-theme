@@ -1,0 +1,165 @@
+<section
+  id="hero-{{ section.id }}"
+  class="bg-background selection:bg-primary selection:text-primary-foreground relative flex min-h-screen w-full items-center justify-center overflow-hidden"
+>
+  <!-- SVG bg debris -->
+  <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+    <svg
+      class="absolute inset-0 h-[120%] w-full opacity-[0.15] dark:opacity-[0.1]"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      data-gsap="parallax"
+      data-y="-100"
+      data-scale="1.1"
+    >
+      <defs>
+        <pattern id="grid-pattern" width="10" height="10" patternUnits="userSpaceOnUse">
+          <path d="M 10 0 L 0 0 0 10" fill="none" stroke="var(--primary)" stroke-width="0.1"/>
+        </pattern>
+      </defs>
+      <rect width="100" height="100" fill="url(#grid-pattern)" />
+    </svg>
+
+    <div class="absolute inset-0 flex justify-around px-20 opacity-20">
+      {% for i in (1..5) %}
+        <div
+          class="via-primary h-full w-[1px] bg-gradient-to-b from-transparent to-transparent"
+          data-gsap="float"
+          data-duration="{{ 5 | plus: i }}"
+          data-y="{{ 50 | times: i | divided_by: 2 }}"
+        ></div>
+      {% endfor %}
+    </div>
+
+    <div
+      class="text-primary/70 typewriter-cursor absolute top-[10%] left-[5%] font-mono text-[8px] tracking-[0.5em] uppercase"
+      data-gsap="typewriter"
+      data-duration="3"
+      data-delay="1.5"
+    >
+      [ SYSTEM_ESTABLISHED_2026 ]
+    </div>
+
+    <div
+      class="border-primary absolute bottom-[10%] left-[5%] border-l py-2 pl-4"
+      data-gsap="fade-right"
+      data-delay="1"
+    >
+      <div class="bg-primary/30 mb-1 h-1 w-20"></div>
+      <div class="bg-primary/30 h-1 w-12"></div>
+      <p
+        class="text-primary typewriter-cursor mt-2 font-mono text-[7px] opacity-50"
+        data-gsap="typewriter"
+        data-duration="3"
+      >
+        LAT: 40.7128° N // LNG: 74.0060° W
+      </p>
+    </div>
+  </div>
+
+  <!-- hero png -->
+  <div class="absolute top-1/2 right-[5%] z-10 hidden -translate-y-1/2 items-center justify-center opacity-90 lg:flex">
+    <img
+      src="{{ 'hero-main.png' | asset_url }}"
+      class="hero-parallax w-full max-w-[800px] object-contain opacity-75 brightness-90 grayscale transition-all duration-500"
+      style="filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 10px rgba(0,0,0,0.1));"
+      data-gsap="parallax fade-in pulse"
+      data-depth="0.1"
+      data-scale="1.03"
+      data-duration="5"
+      alt="Core Silhouette"
+    >
+  </div>
+
+  <div
+    class="border-border pointer-events-auto absolute top-[15%] right-[8%] z-20 hidden h-72 w-56 overflow-hidden border lg:block"
+    style="clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);"
+    data-gsap="fade-in float hover-bright"
+    data-delay="0.8"
+    data-y="-15"
+    data-duration="3"
+  >
+    <img
+      src="{{ 'detail-weave-1.jpeg' | asset_url }}"
+      class="hero-parallax h-full w-full scale-125 object-cover grayscale transition-all duration-700 ease-in-out hover:grayscale-0"
+      data-depth="0.1"
+      alt="Surface Detail"
+    >
+    <div class="absolute bottom-3 left-6">
+      <p class="text-primary font-mono text-[9px] tracking-widest uppercase">Surface_Detail // 002</p>
+    </div>
+  </div>
+
+  <div
+    class="absolute top-[40%] right-[20%] z-5 hidden h-48 w-48 opacity-30 blur-[4px] lg:block"
+    data-gsap="fade-in float"
+    data-duration="4"
+    data-delay="1.2"
+  >
+    <img
+      src="{{ 'hero-seven.png' | asset_url }}"
+      class="hero-parallax h-full w-full object-contain grayscale"
+      data-depth="0.3"
+      alt="Motion Blur"
+    >
+  </div>
+
+  <div
+    class="border-border pointer-events-auto absolute right-[8%] bottom-[15%] z-20 hidden h-72 w-56 overflow-hidden border lg:block"
+    style="clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);"
+    data-gsap="fade-in float hover-bright"
+    data-delay="0.8"
+    data-y="-15"
+    data-duration="3"
+  >
+    <img
+      src="{{ 'detail-weave-2.jpeg' | asset_url }}"
+      class="hero-parallax h-full w-full scale-125 object-cover grayscale transition-all duration-700 ease-in-out hover:grayscale-0"
+      data-depth="0.1"
+      alt="Surface Detail"
+    >
+    <div class="absolute bottom-3 left-6">
+      <p class="text-primary font-mono text-[9px] tracking-widest uppercase">Archive_Ref // 004</p>
+    </div>
+  </div>
+
+  <div class="relative z-30 container mx-auto px-6">
+    <div class="w-full lg:w-1/2">
+      <div class="overflow-hidden">
+        <p
+          data-gsap="fade-right"
+          class="bg-primary text-primary-foreground mb-6 inline-block px-2 py-1 text-[10px] font-bold tracking-[0.3em] uppercase"
+        >
+          Limited Drop 2026
+        </p>
+      </div>
+
+      <h1 class="text-foreground flex flex-col leading-[0.85] font-black uppercase italic">
+        <span class="text-[15vw] tracking-tighter lg:text-[10vw]" data-gsap="fade-right" data-delay="0.2">MOVE</span>
+        <span
+          class="text-[18vw] tracking-tighter text-transparent lg:text-[12vw]"
+          style="-webkit-text-stroke: 3px var(--primary)"
+          data-gsap="fade-right"
+          data-delay="0.4"
+          >DIFFERENT</span
+        >
+      </h1>
+
+      <div class="mt-12 max-w-sm space-y-6" data-gsap="fade-in" data-delay="0.6">
+        <p class="text-muted-foreground pb-3 font-mono text-[10px] leading-relaxed tracking-tight uppercase">
+          Engineered for the blue hour. <br>
+          Built with a focus on presence and ergonomic motion.
+        </p>
+        <div class="flex items-center gap-6">
+          <a
+            href="/collections/all"
+            class="bg-primary text-background hover:bg-primary px-8 py-4 font-mono text-[10px] font-bold tracking-widest uppercase transition-colors"
+            data-gsap="hover-lift"
+          >
+            Explore Drop
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

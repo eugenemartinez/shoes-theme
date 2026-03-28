@@ -1,0 +1,313 @@
+<section
+  id="main-cart-{{ section.id }}"
+  class="full-width w-full py-20"
+  style="background: var(--background);"
+>
+  <div
+    class="px-6"
+    style="max-width: var(--page-width); margin-inline: auto;"
+  >
+    {%- # Header ───────── -%}
+    <div
+      class="mb-12 border-b pb-12"
+      style="border-color: var(--border);"
+      data-gsap="fade-up"
+      data-scroll="true"
+    >
+      <div class="mb-4 flex items-center gap-3">
+        <span class="bg-primary h-1.5 w-1.5 animate-pulse"></span>
+        <p
+          id="manifest-count"
+          class="text-primary font-mono text-[10px] tracking-[0.3em] uppercase"
+        >
+          Current_Manifest // {{ cart.item_count }} Units
+        </p>
+      </div>
+      <h1
+        class="text-foreground text-5xl font-bold tracking-tighter uppercase md:text-6xl"
+        style="font-family: var(--font-headline);"
+      >
+        {{ section.settings.title | default: 'Your Cart' }}
+      </h1>
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+      {%- form 'cart', cart, id: 'cart-form' -%}
+        <div class="grid w-full grid-cols-1 gap-12 py-6 lg:grid-cols-3">
+          {%- # Cart items List ───────── -%}
+          <div
+            class="bg-border flex h-fit w-full flex-col gap-px border lg:col-span-2"
+            style="border-color: var(--border);"
+            id="cart-items"
+          >
+            {%- for item in cart.items -%}
+              <div
+                class="bg-background group relative grid w-full grid-cols-1 gap-6 p-6 sm:grid-cols-[160px_1fr]"
+                id="cart-item-{{ item.key }}"
+                data-gsap="fade-up"
+                data-scroll="true"
+                data-delay="{{ forloop.index | times: 0.05 }}"
+              >
+                {%- # Item image -%}
+                <a
+                  href="{{ item.url }}"
+                  class="bg-secondary border-border relative aspect-square w-full shrink-0 overflow-hidden border"
+                >
+                  {%- if item.image -%}
+                    <img
+                      src="{{ item.image | image_url: width: 400 }}"
+                      alt="{{ item.image.alt | escape }}"
+                      class="h-full w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'h-full w-full object-cover opacity-20' }}
+                  {%- endif -%}
+                </a>
+
+                {%- # Item content container -%}
+                <div class="flex w-full min-w-0 flex-col">
+                  {%- # Top Row: Title & Price -%}
+                  <div class="flex w-full items-start justify-between gap-4">
+                    <div class="flex min-w-0 flex-col gap-1">
+                      <p class="text-primary font-mono text-[9px] tracking-widest uppercase">
+                        Model_Ref: {{ item.product.id | append: '' | slice: -8, 8 }}
+                      </p>
+                      <a
+                        href="{{ item.url }}"
+                        class="text-foreground hover:text-primary block truncate text-xl leading-tight font-bold tracking-tight uppercase transition-colors"
+                        style="font-family: var(--font-headline);"
+                      >
+                        {{ item.product.title }}
+                      </a>
+
+                      {%- unless item.product.has_only_default_variant -%}
+                        <p class="text-foreground/40 mt-1 font-mono text-[10px] uppercase">
+                          Spec: {{ item.variant.title }}
+                        </p>
+                      {%- endunless -%}
+                    </div>
+
+                    <div class="shrink-0 text-right">
+                      <span
+                        id="line-price-{{ item.key }}"
+                        class="text-foreground font-mono text-sm font-bold"
+                      >
+                        {{ item.final_line_price | money }}
+                      </span>
+                    </div>
+                  </div>
+
+                  {%- # Bottom Row: Qty & Delete -%}
+                  <div class="mt-auto flex w-full items-end justify-between pt-8">
+                    {%- # Qty Selector -%}
+                    <div class="bg-card border-border flex items-center border">
+                      <button
+                        type="button"
+                        class="text-foreground/40 hover:text-destructive flex h-8 w-8 cursor-pointer items-center justify-center transition-colors"
+                        onclick="changeQty('{{ item.key }}', -1)"
+                      >
+                        <svg
+                          width="10"
+                          height="10"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                      </button>
+                      <span
+                        class="text-foreground border-border flex h-8 w-10 items-center justify-center border-x font-mono text-xs"
+                        id="qty-{{ item.key }}"
+                      >
+                        {{ item.quantity }}
+                      </span>
+                      <button
+                        type="button"
+                        class="text-foreground/40 hover:text-primary flex h-8 w-8 cursor-pointer items-center justify-center transition-colors"
+                        onclick="changeQty('{{ item.key }}', 1)"
+                      >
+                        <svg
+                          width="10"
+                          height="10"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div class="text-right">
+                      <button
+                        type="button"
+                        class="text-foreground/30 hover:text-destructive cursor-pointer font-mono text-[9px] tracking-[0.2em] uppercase transition-colors"
+                        onclick="removeCartItem('{{ item.key }}')"
+                      >
+                        [ Delete_Entry ]
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {%- # Sidebar / Summary ───────── -%}
+          <div
+            class="flex h-fit w-full flex-col gap-6 lg:sticky lg:top-24"
+            data-gsap="fade-left"
+            data-scroll="true"
+          >
+            <div class="border-border bg-card flex flex-col gap-8 border p-8">
+              <h2 class="text-primary font-mono text-[10px] tracking-[0.3em] uppercase">Order_Total_Calculation</h2>
+
+              <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-foreground/40 font-mono text-[10px] uppercase">Subtotal</span>
+                  <span class="text-foreground font-mono text-sm" id="cart-subtotal">
+                    {{ cart.total_price | money }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-foreground/40 font-mono text-[10px] uppercase">Shipping</span>
+                  <span class="text-foreground/20 font-mono text-[9px] tracking-tighter uppercase"
+                    >Auto_Calc_At_Checkout</span
+                  >
+                </div>
+                <div class="border-border mt-2 flex items-center justify-between border-t border-dashed pt-4">
+                  <span class="text-foreground text-sm font-bold tracking-widest uppercase">Grand_Total</span>
+                  <span class="text-primary font-mono text-xl font-bold" id="cart-total">
+                    {{ cart.total_price | money }}
+                  </span>
+                </div>
+              </div>
+
+              {%- if section.settings.show_note -%}
+                <div class="flex flex-col gap-2">
+                  <label for="cart-note" class="text-foreground/30 font-mono text-[9px] tracking-widest uppercase"
+                    >Entry_Note</label
+                  >
+                  <textarea
+                    id="cart-note"
+                    name="note"
+                    rows="3"
+                    class="bg-background text-foreground border-border focus:border-primary border p-3 font-mono text-xs transition-colors outline-none"
+                  >{{ cart.note }}</textarea>
+                </div>
+              {%- endif -%}
+
+              <button
+                type="submit"
+                name="checkout"
+                class="group relative flex w-full cursor-pointer items-center justify-center gap-3 py-5 font-mono text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300"
+                style="background: var(--primary); color: var(--primary-foreground); clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);"
+              >
+                Proceed_To_Checkout
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  class="transition-transform group-hover:translate-x-1"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </button>
+
+              <a
+                href="{{ section.settings.continue_url | default: '/collections/all' }}"
+                class="text-foreground/40 hover:text-primary text-center font-mono text-[9px] tracking-widest uppercase"
+              >
+                [ Continue_Shopping ]
+              </a>
+            </div>
+          </div>
+        </div>
+      {%- endform -%}
+    {%- else -%}
+      <div class="border-border flex flex-col items-center justify-center gap-8 border border-dashed py-40 text-center">
+        <h2
+          class="text-foreground text-3xl font-bold tracking-tighter uppercase"
+          style="font-family: var(--font-headline);"
+        >
+          Manifest_Empty
+        </h2>
+        <a
+          href="/collections/all"
+          class="border-primary text-primary hover:bg-primary hover:text-background border px-10 py-4 font-mono text-[10px] tracking-[0.2em] uppercase transition-colors"
+          >Initialize_Shop</a
+        >
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  async function updateCartItem(key, quantity) {
+    const res = await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity }),
+    });
+    const cart = await res.json();
+    if (quantity <= 0) {
+      document.getElementById('cart-item-' + key)?.remove();
+    } else {
+      const qtyEl = document.getElementById('qty-' + key);
+      if (qtyEl) qtyEl.textContent = quantity;
+    }
+    updateCartTotals(cart);
+    updateCartCount(cart.item_count);
+  }
+
+  async function removeCartItem(key) {
+    await updateCartItem(key, 0);
+  }
+
+  function updateCartTotals(cart) {
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: cart.currency,
+    });
+
+    // Update Global Totals
+    const subtotalEl = document.getElementById('cart-subtotal');
+    const totalEl = document.getElementById('cart-total');
+    const manifestEl = document.getElementById('manifest-count');
+
+    if (subtotalEl) subtotalEl.textContent = formatter.format(cart.total_price / 100);
+    if (totalEl) totalEl.textContent = formatter.format(cart.total_price / 100);
+    if (manifestEl) manifestEl.textContent = `Current_Manifest // ${cart.item_count} Units`;
+
+    // Update Individual Line Prices
+    // Shopify's change.js returns the full cart object including an 'items' array
+    cart.items.forEach((item) => {
+      const linePriceEl = document.getElementById(`line-price-${item.key}`);
+      if (linePriceEl) {
+        linePriceEl.textContent = formatter.format(item.final_line_price / 100);
+      }
+    });
+
+    if (cart.item_count === 0) {
+      window.location.reload();
+    }
+  }
+
+  function updateCartCount(count) {
+    document.querySelectorAll('[data-cart-count]').forEach((el) => (el.textContent = count));
+  }
+
+  function changeQty(key, delta) {
+    const qtyEl = document.getElementById('qty-' + key);
+    if (!qtyEl) return;
+    const newQty = Math.max(0, (parseInt(qtyEl.textContent) || 0) + delta);
+    updateCartItem(key, newQty);
+  }
+</script>

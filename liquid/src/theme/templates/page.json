@@ -1,0 +1,9 @@
+{
+	"sections": {
+		"split-manifesto": {
+			"type": "split-manifesto",
+			"settings": {}
+		}
+	},
+	"order": ["split-manifesto"]
+}

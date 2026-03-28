@@ -1,0 +1,109 @@
+<section
+  id="tech-specs-{{ section.id }}"
+  class="bg-grid-texture border-border bg-background relative flex w-full flex-col items-center border-b py-24 lg:py-32"
+>
+  <div class="mx-auto w-full max-w-7xl px-8">
+    <div class="mb-20 flex flex-col items-center gap-4 text-center" data-gsap="fade-up" data-scroll="true">
+      <p class="text-primary typewriter-cursor font-mono text-[10px] tracking-[0.5em] uppercase" data-gsap="typewriter">
+        Core_Architecture
+      </p>
+      <h2 class="text-foreground font-headline text-5xl font-black tracking-tighter uppercase italic lg:text-6xl">
+        Technical <span class="text-transparent" style="-webkit-text-stroke: 1.5px var(--foreground);">Specs</span>
+      </h2>
+    </div>
+
+    <div class="relative grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+      <div class="z-10 order-2 flex flex-col gap-16 lg:order-1 lg:pr-12">
+        <div
+          class="group border-border hover:border-primary border-l-2 pl-6 transition-colors"
+          data-gsap="fade-right"
+          data-scroll="true"
+        >
+          <p
+            class="text-muted-foreground typewriter-cursor font-mono text-[8px] tracking-widest uppercase"
+            data-gsap="typewriter"
+          >
+            Component_01
+          </p>
+          <h3 class="text-foreground font-headline mt-1 text-xl font-bold uppercase italic">Kinetic_Mesh</h3>
+          <p class="text-muted-foreground mt-2 max-w-sm text-sm leading-relaxed">
+            High-density weave designed for maximum airflow and structural integrity during high-velocity movement.
+          </p>
+        </div>
+
+        <div
+          class="group border-border hover:border-primary border-l-2 pl-6 transition-colors"
+          data-gsap="fade-right"
+          data-scroll="true"
+          data-delay="0.2"
+        >
+          <p
+            class="text-muted-foreground typewriter-cursor font-mono text-[8px] tracking-widest uppercase"
+            data-gsap="typewriter"
+          >
+            Component_02
+          </p>
+          <h3 class="text-foreground font-headline mt-1 text-xl font-bold uppercase italic">Carbon_Chassis</h3>
+          <p class="text-muted-foreground mt-2 max-w-sm text-sm leading-relaxed">
+            Internal carbon fiber plate providing 98% energy return on every strike.
+          </p>
+        </div>
+      </div>
+
+      <div class="order-1 flex justify-center lg:order-2">
+        <div
+          class="relative w-full max-w-xl"
+          data-gsap="zoom-out"
+          data-scroll="true"
+        >
+          <img
+            src="{{ 'hero-four.png' | asset_url }}"
+            alt="Hero Sneaker Technical View"
+            class="h-auto w-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+            data-gsap="hover-scale float"
+            data-y="20"
+            data-duration="6"
+          >
+
+          <div
+            class="absolute top-[40%] left-[20%] h-4 w-4"
+            data-gsap="pulse float"
+            data-scale="1.4"
+            data-y="20"
+            data-duration="2"
+            data-scroll="true"
+          >
+            <div class="bg-primary absolute inset-0 rounded-full opacity-75"></div>
+            <div class="bg-primary border-background relative h-full w-full rounded-full border-2"></div>
+          </div>
+
+          <div
+            class="absolute bottom-[30%] left-[50%] h-4 w-4"
+            data-gsap="pulse float"
+            data-scale="1.4"
+            data-y="20"
+            data-duration="2.5"
+            data-delay="0.5"
+            data-scroll="true"
+          >
+            <div class="bg-primary absolute inset-0 rounded-full opacity-75"></div>
+            <div class="bg-primary border-background relative h-full w-full rounded-full border-2"></div>
+          </div>
+
+          <div
+            class="absolute top-[50%] right-[15%] h-4 w-4"
+            data-gsap="pulse float"
+            data-scale="1.4"
+            data-y="20"
+            data-duration="3"
+            data-delay="0.8"
+            data-scroll="true"
+          >
+            <div class="bg-primary absolute inset-0 rounded-full opacity-75"></div>
+            <div class="bg-primary border-background relative h-full w-full rounded-full border-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

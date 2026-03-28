@@ -1,0 +1,66 @@
+<section
+  id="cta-{{ section.id }}"
+  class="relative flex min-h-[80vh] w-full items-center justify-center overflow-hidden bg-black"
+>
+  <div class="absolute inset-0 z-0">
+    <img
+      src="{{ 'cta.png' | asset_url }}"
+      alt="Deployment Ready"
+      class="h-full w-full object-cover opacity-50 grayscale transition-transform duration-[3s]"
+      data-gsap="parallax"
+    >
+    <div class="from-background/70 to-background/70 absolute inset-0 bg-gradient-to-b via-transparent"></div>
+    <div class="absolute inset-0 bg-black/40"></div>
+  </div>
+
+  <div class="relative z-10 flex w-full flex-col items-center justify-center px-6 text-center">
+    <div
+      class="flex max-w-fit flex-col items-center"
+      data-gsap="fade-up"
+      data-scroll="true"
+      data-delay="0.2"
+    >
+      <div class="mb-10 flex items-center justify-center gap-4">
+        <span class="bg-primary/40 h-[1px] w-6"></span>
+        <p class="text-primary font-mono text-[9px] tracking-[0.6em] uppercase">Deployment_Ready</p>
+        <span class="bg-primary/40 h-[1px] w-6"></span>
+      </div>
+
+      <h2 class="text-foreground font-headline text-[11vw] leading-[0.85] font-black tracking-tighter whitespace-nowrap uppercase italic lg:text-[7vw]">
+        Secure the <br>
+        <span class="mt-2 block text-transparent" style="-webkit-text-stroke: 1.5px var(--primary);"
+          >Next_Generation</span
+        >
+      </h2>
+
+      <p
+        class="text-foreground/70 font-body typewriter-cursor mt-12 max-w-sm text-[11px] leading-relaxed tracking-tighter uppercase opacity-80"
+        data-gsap="typewriter"
+      >
+        Archive_001 is now live. Limited allocation for field <br class="hidden lg:block">
+        agents and authorized personnel only.
+      </p>
+
+      <div class="mt-14 flex w-full flex-col items-center justify-center gap-6 pt-5 sm:flex-row">
+        <a
+          href="/collections/all"
+          class="bg-primary text-background hover:bg-primary min-w-[240px] px-10 py-5 font-mono text-[10px] font-bold tracking-[0.2em] uppercase transition-all"
+          data-gsap="hover-lift"
+        >
+          Initialize_Purchase
+        </a>
+
+        <a
+          href="/pages/technology"
+          class="min-w-[240px] border border-white/20 px-10 py-5 font-mono text-[10px] tracking-[0.2em] text-white uppercase transition-colors hover:bg-white/5"
+        >
+          View_Full_Specs
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-10 left-10 opacity-30">
+    <p class="font-mono text-[8px] tracking-widest text-white uppercase">System_V.09 // End_Transmission</p>
+  </div>
+</section>

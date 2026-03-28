@@ -1,0 +1,341 @@
+{%- # Main Collection Section -%}
+<section
+  id="main-collection-{{ section.id }}"
+  class="full-width w-full py-20"
+  style="background: var(--background);"
+>
+  <div
+    class="px-6"
+    style="max-width: var(--page-width); margin-inline: auto;"
+  >
+    {%- # Collection Header ───────── -%}
+    <div
+      class="mb-16 border-b pb-12"
+      style="border-color: var(--border);"
+    >
+      <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+        <div class="flex flex-col gap-4" data-gsap="fade-up" data-scroll="true">
+          <div class="flex items-center gap-3">
+            <span class="bg-primary h-1.5 w-1.5 animate-pulse"></span>
+            <p class="text-primary font-mono text-[10px] tracking-[0.3em] uppercase">
+              Directory // {{ collection.title }}
+            </p>
+          </div>
+          <h1
+            class="text-foreground text-5xl font-bold tracking-tighter uppercase md:text-7xl"
+            style="font-family: var(--font-headline);"
+          >
+            {{ collection.title }}
+          </h1>
+          {%- if collection.description != blank -%}
+            <p class="text-foreground/40 max-w-xl font-mono text-xs leading-relaxed tracking-wide uppercase">
+              {{ collection.description | strip_html }}
+            </p>
+          {%- endif -%}
+        </div>
+
+        {%- # Toolbar ───────── -%}
+        <div
+          class="flex flex-col items-start gap-4 md:items-end"
+          data-gsap="fade-left"
+          data-scroll="true"
+        >
+          <p class="text-foreground/30 font-mono text-[9px] tracking-[0.2em] uppercase">
+            Count: {{ collection.products_count }} _Units_Detected
+          </p>
+
+          {%- if section.settings.show_sort -%}
+            <div class="group bg-card border-border relative inline-flex items-center gap-3 border px-4 py-2">
+              <label for="sort-by" class="text-foreground/40 font-mono text-[9px] tracking-widest uppercase"
+                >Sort_By:</label
+              >
+              <select
+                id="sort-by"
+                name="sort_by"
+                class="text-foreground bg-background cursor-pointer pr-4 font-mono text-[10px] uppercase outline-none"
+                onchange="sortCollection(this.value)"
+              >
+                {%- for option in collection.sort_options -%}
+                  <option
+                    value="{{ option.value }}"
+                    {% if option.value == collection.sort_by %}
+                      selected
+                    {% endif %}
+                  >
+                    {{ option.name }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    {%- # Product Grid ───────── -%}
+    {%- if collection.products.size > 0 -%}
+      <div
+        class="bg-border grid grid-cols-2 gap-px border {{ section.settings.columns }}"
+        style="border-color: var(--border);"
+        data-gsap="stagger-fade-up"
+        data-scroll="true"
+        data-stagger="0.05"
+      >
+        {%- for product in collection.products -%}
+          <div class="bg-background group relative flex h-full w-full flex-col overflow-hidden">
+            {%- # Quick Add Overlay ───────── -%}
+            {%- if product.available -%}
+              <div class="absolute right-0 bottom-0 left-0 z-10 translate-y-full px-4 pb-4 transition-transform duration-300 group-hover:translate-y-0 md:px-6 md:pb-6">
+                {%- if product.has_only_default_variant -%}
+                  <button
+                    type="button"
+                    onclick="quickAdd('{{ product.first_available_variant.id }}', this)"
+                    class="bg-primary text-primary-foreground w-full py-3 font-mono text-[9px] font-bold tracking-[0.2em] uppercase transition-all hover:opacity-90 active:scale-95"
+                    style="clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);"
+                  >
+                    [ Initialize_Add ]
+                  </button>
+                {%- else -%}
+                  <a
+                    href="{{ product.url }}"
+                    class="bg-foreground text-background flex w-full items-center justify-center py-3 font-mono text-[9px] font-bold tracking-[0.2em] uppercase transition-all hover:opacity-90"
+                    style="clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);"
+                  >
+                    [ Select_Spec ]
+                  </a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            <a
+              href="{{ product.url }}"
+              class="hover:bg-card/50 flex h-full flex-col p-4 transition-colors duration-300 md:p-6"
+            >
+              {%- # Product Image -%}
+              <div class="bg-secondary relative mb-6 overflow-hidden aspect-[{{ section.settings.image_ratio | replace: '/', '_' }}]">
+                {%- if product.featured_image -%}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 800 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'h-full w-full object-cover opacity-10' }}
+                {%- endif -%}
+
+                {%- # Status Badges -%}
+                <div class="absolute top-0 right-0 p-4">
+                  {%- if product.available == false -%}
+                    <span class="bg-foreground text-background px-2 py-1 font-mono text-[9px] tracking-tighter uppercase"
+                      >Out_Of_Stock</span
+                    >
+                  {%- elsif product.compare_at_price > product.price -%}
+                    <span class="bg-primary text-primary-foreground px-2 py-1 font-mono text-[9px] tracking-tighter uppercase"
+                      >Price_Reduced</span
+                    >
+                  {%- endif -%}
+                </div>
+              </div>
+
+              {%- # Product Info -%}
+              <div class="mt-auto flex flex-col gap-2 pt-1">
+                <div class="flex items-center justify-between gap-4">
+                  <p class="text-primary font-mono text-[9px] tracking-widest uppercase">
+                    ID: {{ product.id | append: '' | slice: -6, 6 }}
+                  </p>
+                  {%- if section.settings.show_vendor -%}
+                    <p class="text-foreground/30 max-w-[100px] truncate font-mono text-[9px] uppercase">
+                      {{ product.vendor }}
+                    </p>
+                  {%- endif -%}
+                </div>
+
+                <h3
+                  class="text-foreground group-hover:text-primary text-lg leading-tight font-bold tracking-tight uppercase transition-colors"
+                  style="font-family: var(--font-headline);"
+                >
+                  {{ product.title }}
+                </h3>
+
+                <div class="border-border mt-2 flex items-baseline gap-3 border-t pt-4" style="border-style: dashed;">
+                  <span class="text-foreground font-mono text-sm font-bold">{{ product.price | money }}</span>
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="text-foreground/30 font-mono text-[10px] line-through">
+                      {{- product.compare_at_price | money -}}
+                    </span>
+                  {%- endif -%}
+                </div>
+              </div>
+            </a>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- # Pagination ───────── -%}
+      {%- if paginate.pages > 1 -%}
+        <div
+          class="bg-border mx-auto mt-20 flex w-fit items-center justify-center gap-px self-center border"
+          style="border-color: var(--border);"
+          data-gsap="fade-up"
+          data-scroll="true"
+        >
+          {%- if paginate.previous -%}
+            <a
+              href="{{ paginate.previous.url }}"
+              class="bg-background hover:bg-card text-foreground flex h-12 w-12 items-center justify-center transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+            </a>
+          {%- endif -%}
+
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a
+                href="{{ part.url }}"
+                class="bg-background hover:bg-card text-foreground/40 hover:text-foreground flex h-12 w-12 items-center justify-center font-mono text-xs transition-colors"
+              >
+                {{- part.title -}}
+              </a>
+            {%- elsif part.title == paginate.current_page -%}
+              <span class="bg-primary text-primary-foreground flex h-12 w-12 items-center justify-center font-mono text-xs font-bold">
+                {{- part.title -}}
+              </span>
+            {%- else -%}
+              <span class="bg-background text-foreground/10 flex h-12 w-12 items-center justify-center font-mono text-xs italic">
+                {{- part.title -}}
+              </span>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if paginate.next -%}
+            <a
+              href="{{ paginate.next.url }}"
+              class="bg-background hover:bg-card text-foreground flex h-12 w-12 items-center justify-center transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+    {%- else -%}
+      <div
+        class="border-border flex flex-col items-center justify-center border border-dashed py-40 text-center"
+        data-gsap="fade-up"
+      >
+        <h2
+          class="text-foreground/20 mb-4 text-4xl font-bold tracking-tighter uppercase"
+          style="font-family: var(--font-headline);"
+        >
+          Zero_Results
+        </h2>
+        <a
+          href="/collections/all"
+          class="text-primary font-mono text-[10px] tracking-[0.3em] uppercase underline underline-offset-8 transition-opacity hover:opacity-60"
+          >Re-Initialize_Search</a
+        >
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  function sortCollection(value) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort_by', value);
+    window.location.href = url.toString();
+  }
+
+  async function quickAdd(variantId, button) {
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = '[ Executing... ]';
+
+    try {
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{ id: variantId, quantity: 1 }],
+        }),
+      });
+
+      if (response.ok) {
+        button.textContent = '[ Success_Added ]';
+        button.style.background = 'var(--foreground)';
+        button.style.color = 'var(--background)';
+
+        // Refresh cart data to update the manifest count globally
+        const cartRes = await fetch('/cart.js');
+        const cart = await cartRes.json();
+
+        // Use the reactive update function from our previous cart logic
+        if (typeof updateCartTotals === 'function') {
+          updateCartTotals(cart);
+        } else {
+          // Fallback if updateCartTotals isn't on this page (updates header count)
+          document.querySelectorAll('[id="manifest-count"]').forEach((el) => {
+            el.textContent = `Current_Manifest // ${cart.item_count} Units`;
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Quick Add Error:', error);
+      button.textContent = '[ System_Error ]';
+    } finally {
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = originalText;
+        button.style.background = '';
+        button.style.color = '';
+      }, 2000);
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Main Collection",
+  "settings": [
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (Desktop)",
+      "options": [
+        { "value": "lg:grid-cols-2", "label": "2 Columns" },
+        { "value": "lg:grid-cols-3", "label": "3 Columns" },
+        { "value": "lg:grid-cols-4", "label": "4 Columns" }
+      ],
+      "default": "lg:grid-cols-4"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image Ratio",
+      "options": [
+        { "value": "1/1", "label": "Square" },
+        { "value": "4/5", "label": "Tall" },
+        { "value": "16/9", "label": "Wide" }
+      ],
+      "default": "4/5"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show Sort Dropdown",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,125 @@
+{%- # sections/related-products.liquid -%}
+
+<section id="related-products" class="bg-background border-border w-full border-t py-12 md:py-24">
+  <div
+    class="px-4 md:px-8"
+    data-gsap="fade-up"
+    data-scroll="true"
+    style="max-width: var(--page-width); margin-inline: auto;"
+  >
+    {%- # Section Header ───────── -%}
+    <div class="mb-10 flex items-center gap-4 md:mb-16 md:gap-6">
+      <div class="bg-border/30 h-[1px] flex-1"></div>
+      {%- if section.settings.heading != blank -%}
+        <h2 class="text-foreground font-mono text-[9px] font-bold tracking-[0.3em] whitespace-nowrap uppercase md:text-[10px] md:tracking-[0.5em]">
+          {{ section.settings.heading }}
+        </h2>
+      {%- endif -%}
+      <div class="bg-primary h-[1px] w-12 md:w-20"></div>
+    </div>
+
+    {%- assign collection_handle = section.settings.collection_handle | default: 'all' -%}
+    {%- assign related_collection = collections[collection_handle] -%}
+    {%- assign limit = section.settings.limit | default: 4 -%}
+
+    {%- if related_collection != null and related_collection.products_count > 0 -%}
+      {%- # RESPONSIVE GRID: 1 col on mobile, 2 on tablet, 4 on desktop -%}
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        {%- for product in related_collection.products limit: limit -%}
+          <div class="bg-background group border-border/50 hover:border-primary/50 hover:bg-card/30 relative flex flex-col border p-5 transition-all md:p-6">
+            {%- # Image Container ───────── -%}
+            <a
+              href="{{ product.url }}"
+              class="border-border bg-secondary relative mb-6 aspect-square w-full overflow-hidden border md:mb-8"
+            >
+              {%- # Unit ID Decal -%}
+              <span class="text-foreground/40 bg-background/90 border-border/50 absolute top-3 right-3 z-10 border px-1.5 py-0.5 font-mono text-[8px] tracking-tighter uppercase backdrop-blur-sm">
+                REF_{{ product.id | slice: -4, 4 }}
+              </span>
+
+              <img
+                src="{{ product.featured_image | image_url: width: 600 }}"
+                alt="{{ product.title }}"
+                loading="lazy"
+                class="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
+              >
+            </a>
+
+            {%- # Product Info ───────── -%}
+            <div class="flex flex-1 flex-col gap-2">
+              <a
+                href="{{ product.url }}"
+                class="text-foreground hover:text-primary text-xs leading-tight font-bold tracking-tight uppercase transition-colors md:text-sm"
+              >
+                {{ product.title }}
+              </a>
+
+              <div class="border-border mt-auto flex items-end justify-between border-t border-dashed pt-4 md:pt-6">
+                <span class="text-foreground/60 font-mono text-[10px] font-medium md:text-xs">
+                  {{ product.price | money }}
+                </span>
+
+                <a
+                  href="{{ product.url }}"
+                  class="text-primary hover:text-primary/80 font-mono text-[8px] tracking-[0.2em] uppercase transition-colors md:text-[9px]"
+                >
+                  [ View_File ]
+                </a>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="border-border border border-dashed py-12 text-center md:py-24">
+        <p class="text-foreground/20 font-mono text-[9px] tracking-[0.3em] uppercase">
+          Data_Entry_Not_Found // System_Idle
+        </p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Related_Units"
+    },
+    {
+      "type": "collection",
+      "id": "collection_handle",
+      "label": "Select Collection"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns",
+      "default": "md:grid-cols-4",
+      "options": [
+        { "value": "md:grid-cols-2", "label": "2 columns" },
+        { "value": "md:grid-cols-3", "label": "3 columns" },
+        { "value": "md:grid-cols-4", "label": "4 columns" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Product Limit",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,198 @@
+{%- # Cart Drawer / Manifest Sidebar -%}
+<div
+  id="cart-drawer"
+  class="invisible fixed inset-0 z-[100]"
+  aria-hidden="true"
+>
+  {%- # Backdrop -%}
+  <div
+    class="bg-background/60 absolute inset-0 opacity-0 backdrop-blur-sm transition-opacity duration-500"
+    id="cart-drawer-backdrop"
+    onclick="closeCartDrawer()"
+  ></div>
+
+  {%- # Drawer Panel -%}
+  <div
+    id="cart-drawer-panel"
+    class="bg-background border-border absolute top-0 right-0 flex h-full w-full max-w-md translate-x-full flex-col border-l transition-transform duration-500"
+  >
+    {%- # Header ───────── -%}
+    <div class="border-border flex items-center justify-between gap-4 overflow-hidden border-b p-6">
+      {%- # Left Side: Status (This will truncate if needed) -%}
+      <div class="flex min-w-0 items-center gap-3">
+        <span class="bg-primary h-2 w-2 shrink-0 animate-pulse"></span>
+        <h2 class="text-foreground truncate font-mono text-[10px] font-bold tracking-[0.2em] whitespace-nowrap uppercase">
+          MANIFEST // ID_01
+        </h2>
+      </div>
+
+      {%- # Right Side: Close Button (Always preserved) -%}
+      <button
+        onclick="closeCartDrawer()"
+        class="text-foreground/40 hover:text-destructive shrink-0 cursor-pointer font-mono text-[10px] whitespace-nowrap uppercase transition-colors"
+      >
+        [ Close_X ]
+      </button>
+    </div>
+
+    {%- # Cart Items Scroll Area -%}
+    <div
+      id="cart-drawer-items"
+      class="no-scrollbar flex flex-1 flex-col gap-6 overflow-y-auto p-6"
+    >
+      {%- # JS will inject items here dynamically -%}
+      <div class="border-border flex h-full items-center justify-center border border-dashed py-20">
+        <p class="text-foreground/20 font-mono text-[9px] uppercase">Empty_Manifest_Detected</p>
+      </div>
+    </div>
+
+    {%- # Footer / Checkout -%}
+    <div class="border-border bg-card/30 border-t p-6">
+      <div class="flex flex-col gap-4">
+        <div class="border-border flex items-end justify-between border-b border-dashed pb-4">
+          <span class="text-foreground/40 font-mono text-[9px] uppercase">Estimated_Total:</span>
+          <span id="cart-drawer-total" class="text-foreground font-mono text-lg font-bold">$0.00</span>
+        </div>
+
+        <a
+          href="/checkout"
+          class="bg-primary text-primary-foreground w-full cursor-pointer py-4 text-center font-mono text-xs font-bold tracking-[0.3em] uppercase transition-all hover:opacity-90"
+          data-gsap="hover-lift"
+          style="clip-path: polygon(0 0, 100% 0, 100% 70%, 95% 100%, 0 100%);"
+        >
+          [ Execute_Checkout ]
+        </a>
+
+        <button
+          onclick="closeCartDrawer()"
+          class="border-border text-foreground/40 hover:text-foreground w-full cursor-pointer border py-3 font-mono text-[9px] uppercase transition-colors"
+        >
+          Continue_Browsing
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openCartDrawer() {
+    const drawer = document.getElementById('cart-drawer');
+    const panel = document.getElementById('cart-drawer-panel');
+    const backdrop = document.getElementById('cart-drawer-backdrop');
+
+    drawer.classList.remove('invisible');
+    setTimeout(() => {
+      panel.classList.remove('translate-x-full');
+      backdrop.classList.remove('opacity-0');
+    }, 10);
+
+    refreshCartDrawer();
+  }
+
+  function closeCartDrawer() {
+    const panel = document.getElementById('cart-drawer-panel');
+    const backdrop = document.getElementById('cart-drawer-backdrop');
+
+    panel.classList.add('translate-x-full');
+    backdrop.classList.add('opacity-0');
+
+    setTimeout(() => {
+      document.getElementById('cart-drawer').classList.add('invisible');
+    }, 500);
+  }
+
+  async function refreshCartDrawer() {
+    const res = await fetch('/cart.js');
+    const cart = await res.json(); // Fixed the double assignment here
+    const container = document.getElementById('cart-drawer-items');
+    const totalEl = document.getElementById('cart-drawer-total');
+    const dot = document.getElementById('header-cart-dot');
+
+    // Update total price display
+    if (totalEl) totalEl.textContent = formatMoney(cart.total_price);
+
+    // Sync the header status indicator
+    if (dot) {
+      cart.item_count > 0 ? dot.classList.remove('scale-0') : dot.classList.add('scale-0');
+    }
+
+    // Handle empty state
+    if (cart.item_count === 0) {
+      container.innerHTML = `
+      <div class="flex flex-col h-full items-center justify-center border border-dashed border-border/40 py-20 opacity-30">
+        <p class="font-mono text-[9px] uppercase tracking-[0.2em]">Zero_Units_In_Manifest</p>
+      </div>`;
+      return;
+    }
+
+    // Render items
+    container.innerHTML = cart.items
+      .map(
+        (item, index) => `
+    <div class="flex gap-6 border-b border-border border-dashed pb-8 relative group">
+      <div class="h-24 w-24 bg-secondary shrink-0 overflow-hidden border border-border">
+        <img src="${item.image}" alt="${item.title}" class="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+      </div>
+      
+      <div class="flex flex-col flex-1 gap-1">
+        <div class="flex justify-between items-start">
+          <p class="font-mono text-[8px] text-primary uppercase tracking-tighter">REF_${item.variant_id}</p>
+          <button onclick="updateDrawerQty(${index + 1}, 0)" class="text-foreground/20 hover:text-destructive font-mono text-[8px] uppercase cursor-pointer">[ Purge ]</button>
+        </div>
+        
+        <h3 class="font-bold text-sm uppercase tracking-tight text-foreground leading-tight">${item.product_title}</h3>
+        <p class="font-mono text-[9px] text-foreground/40 uppercase mt-1">${item.variant_title || 'Base_Model'}</p>
+        
+        <div class="flex justify-between items-end mt-auto pt-4">
+          <div class="flex items-center border border-border bg-background">
+             <button onclick="updateDrawerQty(${index + 1}, ${item.quantity - 1})" class="px-2 py-1 text-foreground/40 hover:text-destructive font-mono text-xs cursor-pointer">-</button>
+             <span class="text-foreground px-3 py-1 font-mono text-[10px] border-x border-border">${item.quantity}</span>
+             <button onclick="updateDrawerQty(${index + 1}, ${item.quantity + 1})" class="px-2 py-1 text-foreground/40 hover:text-primary font-mono text-xs cursor-pointer">+</button>
+          </div>
+          <span class="font-mono text-xs font-bold text-foreground">${formatMoney(item.line_price)}</span>
+        </div>
+      </div>
+    </div>
+  `,
+      )
+      .join('');
+  }
+
+  async function updateDrawerQty(line, newQty) {
+    const container = document.getElementById('cart-drawer-items');
+    // Visual feedback: dim the items while processing
+    if (container) container.style.opacity = '0.4';
+
+    try {
+      // We use Shopify's /cart/change.js API
+      const res = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          line: line,
+          quantity: newQty,
+        }),
+      });
+
+      if (res.ok) {
+        // After a successful change, re-fetch the cart data and re-render
+        await refreshCartDrawer();
+
+        // Optional: If you have a counter in your header with id "manifest-count"
+        const cartRes = await fetch('/cart.js');
+        const cart = await cartRes.json();
+        document.querySelectorAll('[id="manifest-count"]').forEach((el) => {
+          el.textContent = `Current_Manifest // ${cart.item_count} Units`;
+        });
+      }
+    } catch (err) {
+      console.error('System_Update_Failure //', err);
+    } finally {
+      if (container) container.style.opacity = '1';
+    }
+  }
+
+  function formatMoney(cents) {
+    return '$' + (cents / 100).toFixed(2);
+  }
+</script>

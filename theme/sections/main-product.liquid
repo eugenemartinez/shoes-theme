@@ -1,0 +1,331 @@
+{%- # Main Product Section -%}
+<section
+  id="main-product-{{ section.id }}"
+  class="full-width flex w-full py-24"
+  style="background: var(--background);"
+>
+  <div
+    class="px-6"
+    style="max-width: var(--page-width); margin-inline: auto;"
+  >
+    <div class="grid grid-cols-1 gap-16 lg:grid-cols-2">
+      {%- # Left — Media Gallery ───────── -%}
+      <div
+        class="flex flex-col gap-6"
+        data-gsap="fade-right"
+        data-scroll="true"
+      >
+        <div
+          class="bg-secondary border-border relative overflow-hidden border"
+          id="product-main-image-container"
+        >
+          {%- if product.featured_image -%}
+            <img
+              src="{{ product.featured_image | image_url: width: 1200 }}"
+              alt="{{ product.featured_image.alt | escape }}"
+              class="h-full w-full object-cover grayscale transition-all duration-700 hover:grayscale-0"
+              style="aspect-ratio: 1/1;"
+              loading="eager"
+              id="product-main-img"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'h-full w-full object-cover opacity-10' }}
+          {%- endif -%}
+
+          {%- # Inventory Overlay -%}
+          <div class="absolute bottom-4 left-4">
+            <div class="bg-background/80 border-border flex items-center gap-2 border px-3 py-1 font-mono text-[9px] tracking-widest uppercase backdrop-blur-sm">
+              <span class="bg-primary h-1 w-1 {% if product.available %}animate-pulse{% endif %}"></span>
+              Status: {% if product.available %}Active_Stock{% else %}Depleted{% endif %}
+            </div>
+          </div>
+        </div>
+
+        {%- # Thumbnails -%}
+        {%- if product.images.size > 1 -%}
+          <div class="no-scrollbar flex gap-2 overflow-x-auto pb-2">
+            {%- for image in product.images -%}
+              <button
+                class="shrink-0 border transition-all duration-300 {% if forloop.first %}border-primary{% else %}border-border{% endif %}"
+                style="width: 80px; height: 80px;"
+                data-thumbnail="{{ image | image_url: width: 1200 }}"
+                data-thumbnail-alt="{{ image.alt | escape }}"
+                onclick="selectThumbnail(this)"
+              >
+                <img
+                  src="{{ image | image_url: width: 200 }}"
+                  alt="{{ image.alt | escape }}"
+                  class="h-full w-full object-cover grayscale transition-all hover:grayscale-0"
+                  loading="lazy"
+                >
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- # Right — Product Specs ───────── -%}
+      <div
+        class="flex flex-col gap-8"
+        data-gsap="fade-left"
+        data-scroll="true"
+      >
+        <div class="flex flex-col gap-2">
+          {%- if product.vendor != blank and section.settings.show_vendor -%}
+            <p class="text-primary font-mono text-[10px] tracking-[0.4em] uppercase">Origin // {{ product.vendor }}</p>
+          {%- endif -%}
+
+          <h1
+            class="text-foreground text-5xl font-bold tracking-tighter uppercase lg:text-6xl"
+            style="font-family: var(--font-headline);"
+          >
+            {{ product.title }}
+          </h1>
+
+          <div class="mt-2 flex items-center gap-4">
+            <span class="text-foreground font-mono text-2xl font-bold" id="product-price">
+              {{ product.selected_or_first_available_variant.price | money }}
+            </span>
+            {%- if product.selected_or_first_available_variant.compare_at_price
+                > product.selected_or_first_available_variant.price
+            -%}
+              <span class="text-foreground/30 font-mono text-sm line-through">
+                {{ product.selected_or_first_available_variant.compare_at_price | money }}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- # Form Interface ───────── -%}
+        <div class="border-border border-t pt-8">
+          {%- form 'product', product, id: 'product-form', class: 'flex flex-col gap-8', novalidate: true -%}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="variant-id">
+
+            {%- # Variants -%}
+            {%- unless product.has_only_default_variant -%}
+              <div class="flex flex-col gap-6">
+                {%- for option in product.options_with_values -%}
+                  <div class="flex flex-col gap-3" data-option-name="{{ option.name }}">
+                    <div class="flex items-end justify-between">
+                      <label class="text-foreground/40 font-mono text-[9px] tracking-widest uppercase">
+                        Select_{{ option.name }}:
+                      </label>
+                      <span
+                        class="text-foreground font-mono text-[10px] uppercase"
+                        id="selected-{{ option.name | handleize }}"
+                      >
+                        {{ option.selected_value }}
+                      </span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                      {%- for value in option.values -%}
+                        <button
+                          type="button"
+                          class="border px-6 py-2 font-mono text-[11px] uppercase transition-all duration-300"
+                          style="
+                            border-color: {% if option.selected_value == value %}var(--primary){% else %}var(--border){% endif %};
+                            background: {% if option.selected_value == value %}var(--primary){% else %}transparent{% endif %};
+                            color: {% if option.selected_value == value %}var(--primary-foreground){% else %}var(--foreground){% endif %};
+                          "
+                          data-option-value="{{ value | escape }}"
+                          data-option-index="{{ forloop.parentloop.index0 }}"
+                          onclick="selectVariantOption(this)"
+                        >
+                          {{ value }}
+                        </button>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                {%- endfor -%}
+              </div>
+            {%- endunless -%}
+
+            {%- # Quantity & Action -%}
+            <div class="flex flex-col gap-4 pt-4">
+              <div class="bg-border border-border flex w-fit items-center gap-px border">
+                <button
+                  type="button"
+                  onclick="updateQty(-1)"
+                  class="bg-background hover:bg-card text-foreground flex h-12 w-12 items-center justify-center font-mono"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  name="quantity"
+                  id="quantity"
+                  value="1"
+                  min="1"
+                  class="bg-background text-foreground border-border h-12 w-16 border-x text-center font-mono text-sm outline-none"
+                >
+                <button
+                  type="button"
+                  onclick="updateQty(1)"
+                  class="bg-background hover:bg-card text-foreground flex h-12 w-12 items-center justify-center font-mono"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                name="add"
+                id="add-to-cart"
+                class="bg-primary text-primary-foreground relative w-full py-5 font-mono text-xs font-bold tracking-[0.3em] uppercase transition-all hover:opacity-90 active:scale-[0.98]"
+                style="clip-path: polygon(0 0, 100% 0, 100% 70%, 95% 100%, 0 100%);"
+                {%- unless product.selected_or_first_available_variant.available -%}
+                  disabled
+                {%- endunless -%}
+              >
+                {%- if product.selected_or_first_available_variant.available -%}
+                  [ Execute_Add_To_Manifest ]
+                {%- else -%}
+                  [ Unit_Unavailable ]
+                {%- endif -%}
+              </button>
+            </div>
+          {%- endform -%}
+        </div>
+
+        {%- # Description -%}
+        <div class="border-border border-t pt-8">
+          <div class="prose prose-invert text-foreground/50 font-mono text-[11px] leading-relaxed tracking-wide uppercase">
+            {{ product.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Dynamic Variant Data for JS logic
+  const productVariants = {{ product.variants | json }};
+
+  function selectThumbnail(btn) {
+    const mainImg = document.getElementById('product-main-img');
+    mainImg.src = btn.dataset.thumbnail;
+    mainImg.alt = btn.dataset.thumbnailAlt;
+    
+    document.querySelectorAll('[data-thumbnail]').forEach(b => b.classList.replace('border-primary', 'border-border'));
+    btn.classList.replace('border-border', 'border-primary');
+  }
+
+  function updateQty(delta) {
+    const input = document.getElementById('quantity');
+    input.value = Math.max(1, parseInt(input.value) + delta);
+  }
+
+  function selectVariantOption(btn) {
+    const group = btn.closest('[data-option-name]');
+    const optionName = group.dataset.optionName;
+    const value = btn.dataset.optionValue;
+
+    // Reset styles
+    group.querySelectorAll('button').forEach(b => {
+      b.style.borderColor = 'var(--border)';
+      b.style.background = 'transparent';
+      b.style.color = 'var(--foreground)';
+    });
+
+    // Active styles
+    btn.style.borderColor = 'var(--primary)';
+    btn.style.background = 'var(--primary)';
+    btn.style.color = 'var(--primary-foreground)';
+
+    // Update label
+    document.getElementById(`selected-${optionName.toLowerCase().replace(/\s+/g, '-')}`).textContent = value;
+
+    updateVariantMatch();
+  }
+
+  function updateVariantMatch() {
+    const selectedOptions = [];
+    document.querySelectorAll('[data-option-name]').forEach(group => {
+      const active = Array.from(group.querySelectorAll('button')).find(b => b.style.background === 'var(--primary)');
+      if (active) selectedOptions.push(active.dataset.optionValue);
+    });
+
+    const match = productVariants.find(v => 
+      v.options.every((opt, i) => opt === selectedOptions[i])
+    );
+
+    const atcBtn = document.getElementById('add-to-cart');
+    const priceDisplay = document.getElementById('product-price');
+
+    if (match) {
+      document.getElementById('variant-id').value = match.id;
+      priceDisplay.textContent = formatMoney(match.price);
+      
+      if (match.available) {
+        atcBtn.disabled = false;
+        atcBtn.textContent = '[ Execute_Add_To_Manifest ]';
+        atcBtn.style.opacity = '1';
+      } else {
+        atcBtn.disabled = true;
+        atcBtn.textContent = '[ Unit_Unavailable ]';
+        atcBtn.style.opacity = '0.5';
+      }
+
+      if (match.featured_image) {
+        document.getElementById('product-main-img').src = match.featured_image.src;
+      }
+    }
+  }
+
+  function formatMoney(cents) {
+    return '$' + (cents / 100).toFixed(2);
+  }
+
+  // AJAX Add to Cart Flow
+  document.getElementById('product-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('add-to-cart');
+    const formData = new FormData(e.target);
+    
+    btn.textContent = '[ Synchronizing... ]';
+    btn.disabled = true;
+
+    try {
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        btn.textContent = '[ Success_Added ]';
+        btn.style.background = 'var(--foreground)';
+        btn.style.color = 'var(--background)';
+
+        // Update Global Manifest Count
+        const cartRes = await fetch('/cart.js');
+        const cart = await cartRes.json();
+        
+        document.querySelectorAll('[id="manifest-count"]').forEach(el => {
+            el.textContent = `Current_Manifest // ${cart.item_count} Units`;
+        });
+
+        // TRIGGER CART DRAWER (If defined)
+        if (typeof openCartDrawer === 'function') openCartDrawer();
+
+      }
+    } catch (err) {
+      btn.textContent = '[ System_Error ]';
+    } finally {
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.style.background = '';
+        btn.style.color = '';
+        updateVariantMatch();
+      }, 2000);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Main Product",
+  "settings": [{ "type": "checkbox", "id": "show_vendor", "label": "Show Vendor", "default": true }]
+}
+{% endschema %}

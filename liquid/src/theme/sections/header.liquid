@@ -1,0 +1,164 @@
+{%- assign nav = section.settings.menu -%}
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 w-full transition-all duration-500"
+  data-header
+  data-sticky="{{ section.settings.sticky }}"
+>
+  <div class="mx-auto flex w-full items-center justify-between px-6 py-5 lg:px-10">
+    <div class="flex items-center gap-6" data-gsap="fade-down">
+      <a href="/" class="group flex shrink-0 items-center gap-3">
+        <div class="bg-primary h-2 w-2 animate-pulse rounded-full"></div>
+        <span class="text-foreground font-headline group-hover:text-primary text-lg font-black tracking-tighter uppercase italic transition-colors">
+          {{ shop.name }}
+        </span>
+      </a>
+
+      <div class="border-border hidden border-l pl-6 lg:block">
+        <p class="text-muted-foreground font-mono text-[8px] tracking-[0.3em] uppercase">
+          Current_Section //
+          <span
+            id="nav-section-display"
+            class="text-foreground typewriter-cursor transition-all duration-300"
+            data-gsap="typewriter"
+            data-duration="1.5"
+            data-delay="0.5"
+          >
+            {{ section.id }}
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <nav class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-10 lg:flex" aria-label="Main navigation">
+      {%- for link in nav.links -%}
+        <a
+          href="{{ link.url }}"
+          class="text-muted-foreground hover:text-primary font-mono text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 {% if link.current %}text-primary{% endif %}"
+          data-gsap="hover-lift"
+        >
+          {{- link.title -}}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <button
+        id="theme-toggle"
+        class="text-muted-foreground hover:text-foreground flex h-10 w-10 cursor-pointer items-center justify-center transition-colors"
+        aria-label="Toggle theme"
+      >
+        <svg
+          id="icon-sun"
+          class="hidden"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg
+          id="icon-moon"
+          class="hidden"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        onclick="openCartDrawer()"
+        class="group text-muted-foreground hover:text-primary relative flex h-10 w-10 cursor-pointer items-center justify-center transition-colors"
+        aria-label="Open Manifest"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+
+        {%- # Dynamic Status Indicator -%}
+        <span
+          id="header-cart-dot"
+          class="bg-primary absolute top-2 right-2 h-2 w-2 rounded-full transition-transform duration-300 {% if cart.item_count == 0 %}scale-0{% else %}scale-100 animate-pulse{% endif %}"
+        ></span>
+      </button>
+
+      <button
+        id="nav-toggle"
+        class="flex h-10 w-10 flex-col items-center justify-center gap-1 overflow-hidden lg:hidden"
+        aria-label="Toggle menu"
+      >
+        <span class="bg-foreground h-[1px] w-5 transition-transform" data-bar="top"></span>
+        <span class="bg-foreground h-[1px] w-3 translate-x-1 transition-opacity" data-bar="mid"></span>
+        <span class="bg-foreground h-[1px] w-5 transition-transform" data-bar="bot"></span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class="pointer-events-none fixed inset-0 z-40 flex flex-col opacity-0 transition-all duration-500"
+    style="background: var(--background);"
+    aria-hidden="true"
+  >
+    <div
+      class="pointer-events-none absolute inset-0 z-0 opacity-[0.03]"
+      style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 20px 20px;"
+    ></div>
+
+    <div class="relative z-10 flex h-full flex-col px-8 pt-32 pb-12">
+      <nav class="flex flex-col gap-4" aria-label="Mobile navigation">
+        {%- for link in section.settings.menu.links -%}
+          <div class="overflow-hidden">
+            <a
+              href="{{ link.url }}"
+              class="mobile-nav-link text-foreground flex items-baseline gap-4 text-5xl font-black tracking-tighter uppercase italic"
+              style="font-family: var(--font-headline);"
+            >
+              <span class="text-primary font-mono text-[10px] tracking-normal italic">0{{ forloop.index }}</span>
+              {{- link.title -}}
+            </a>
+          </div>
+        {%- endfor -%}
+      </nav>
+
+      <div class="border-border mt-auto border-t pt-8">
+        <div class="grid grid-cols-2 gap-y-6">
+          <div class="flex flex-col gap-1">
+            <p class="text-muted-foreground font-mono text-[8px] tracking-[0.2em] uppercase">Shipping_Status</p>
+            <p class="text-foreground text-[10px] font-bold uppercase">Worldwide / Express</p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-muted-foreground font-mono text-[8px] tracking-[0.2em] uppercase">Support_Core</p>
+            <p class="text-foreground text-[10px] font-bold uppercase">24/7_Active</p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-muted-foreground font-mono text-[8px] tracking-[0.2em] uppercase">Payment_Gateway</p>
+            <p class="text-foreground text-[10px] font-bold uppercase">Encrypted_SSL</p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-muted-foreground font-mono text-[8px] tracking-[0.2em] uppercase">Current_Drop</p>
+            <p class="text-primary text-[10px] font-bold uppercase">Emerald_Series_v1</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      id="nav-close"
+      type="button"
+      class="text-muted-foreground absolute top-8 right-8 z-50 flex cursor-pointer items-center gap-2 p-4 font-mono text-[10px] tracking-[0.3em] uppercase"
+    >
+      Close_Menu <span class="text-foreground pointer-events-none text-xl">×</span>
+    </button>
+  </div>
+</header>

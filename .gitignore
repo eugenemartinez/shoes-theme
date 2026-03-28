@@ -1,0 +1,54 @@
+# ── System / OS ───────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ── Node / Dependencies ───────────────────────────────────────
+# Handles the root and all sub-package node_modules
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── React Project (./react) ───────────────────────────────────
+# Ignore the build output and local env files
+react/dist/
+react/build/
+react/.env
+react/.env.local
+react/.env.development.local
+react/.env.test.local
+react/.env.production.local
+
+# ── Shopify Liquid (./liquid & ./theme) ───────────────────────
+# Shopify CLI metadata and local state
+.shopify/
+**/config/settings_data.json
+# (Optional) If you want to keep settings_data.json in repo, comment the line above.
+
+# Ignore zip files from 'shopify theme share' or 'shopify theme package'
+*.zip
+theme/*.zip
+liquid/*.zip
+
+# ── Build & Release ───────────────────────────────────────────
+release/
+dist/
+out/
+.cache/
+.parcel-cache/
+
+# ── Editor Specific ───────────────────────────────────────────
+# For your AstroNvim setup
+.nvim/
+.vscode/
+.idea/
+*.swp
+*.swo
+Session.vim

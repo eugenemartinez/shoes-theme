@@ -1,0 +1,65 @@
+<section
+  id="manifesto-{{ section.id }}"
+  class="bg-grid-texture border-border bg-background relative w-full overflow-hidden border-b"
+>
+  <div class="flex flex-col lg:flex-row">
+    <div class="relative h-[60vh] w-full overflow-hidden lg:h-screen lg:w-1/2">
+      <img
+        src="{{ 'detail-weave-3.jpeg' | asset_url }}"
+        alt="Technical weave detail"
+        class="h-full w-full object-cover grayscale"
+        style="filter: contrast(1.1) brightness(0.9);"
+        data-gsap="parallax"
+      >
+      <div class="border-primary absolute bottom-8 left-8 border-l pl-4">
+        <p class="text-primary font-mono text-[10px] tracking-[0.4em] uppercase">Surface_Analysis</p>
+        <p class="text-foreground/50 font-mono text-[8px] tracking-[0.2em] uppercase">Micro_Mesh_v1 // 001</p>
+      </div>
+    </div>
+
+    <div class="flex w-full flex-col justify-center px-8 py-20 lg:w-1/2 lg:px-24">
+      <div
+        class="max-w-xl"
+        data-gsap="fade-up"
+        data-scroll="true"
+        data-scroll-start="top 95%"
+        data-delay="0.2"
+      >
+        <p
+          class="text-primary typewriter-cursor mb-6 font-mono text-[10px] tracking-[0.5em] uppercase"
+          data-gsap="typewriter"
+        >
+          The_Protocol
+        </p>
+
+        <h2 class="font-headline text-foreground mb-8 text-5xl leading-[0.9] font-black tracking-tighter uppercase italic lg:text-7xl">
+          Engineered <br>
+          To Move <br>
+          <span class="text-transparent" style="-webkit-text-stroke: 1.5px var(--foreground);">Different</span>
+        </h2>
+
+        <div class="font-body text-muted-foreground space-y-6 text-sm leading-relaxed lg:text-base">
+          <p>
+            Standardization is the enemy of performance. We’ve stripped back the traditional silhouette to reveal a
+            high-density weave capable of extreme kinetic response.
+          </p>
+          <p>
+            Designed during the blue hour, optimized for the concrete. Every stitch is a data point; every curve is a
+            calculated trajectory.
+          </p>
+        </div>
+
+        <div class="border-border mt-12 flex items-center gap-10 border-t pt-12">
+          <div>
+            <p class="text-foreground/40 font-mono text-[8px] tracking-widest uppercase">Response_Rate</p>
+            <p class="text-foreground font-headline text-2xl font-bold italic">99.8%</p>
+          </div>
+          <div>
+            <p class="text-foreground/40 font-mono text-[8px] tracking-widest uppercase">Mass_Index</p>
+            <p class="text-foreground font-headline text-2xl font-bold italic">240G</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,106 @@
+<footer class="flex w-full flex-col items-center justify-center border-t border-white/5 bg-black pt-24 pb-12">
+  <div class="mx-auto flex w-full max-w-7xl flex-col items-center px-8">
+    <div class="mb-24 grid w-full grid-cols-1 justify-items-center gap-16 text-center md:grid-cols-2 lg:grid-cols-4">
+      <div class="flex w-full flex-col items-center space-y-6 text-center">
+        <div>
+          <h2 class="font-headline text-2xl font-black tracking-tighter text-white/90 uppercase italic">
+            THE<span class="text-primary">_</span>THEME
+          </h2>
+          <p class="text-muted-foreground mx-auto mt-4 max-w-[200px] font-mono text-[10px] leading-relaxed tracking-tight uppercase">
+            High-performance silhouettes engineered for high-velocity urban maneuvers.
+          </p>
+        </div>
+        <div class="flex w-full items-center justify-center gap-3">
+          <div class="bg-primary h-1.5 w-1.5 animate-pulse rounded-full shadow-[0_0_8px_#4ade80]"></div>
+          <p class="font-mono text-[9px] tracking-[0.3em] text-white/90 uppercase">Network_Online</p>
+        </div>
+      </div>
+
+      <div class="flex w-full flex-col items-center space-y-6 text-center">
+        <p class="text-primary font-mono text-[10px] tracking-[0.4em] uppercase">Navigation_//</p>
+        <ul class="w-full space-y-4">
+          {% for link in linklists['main-menu'].links %}
+            <li>
+              <a
+                href="{{ link.url }}"
+                class="text-muted-foreground hover:text-foreground inline-block font-mono text-[11px] tracking-widest uppercase transition-colors"
+              >
+                {{ link.title }}_
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="flex w-full flex-col items-center space-y-6 text-center">
+        <p class="text-primary font-mono text-[10px] tracking-[0.4em] uppercase">Protocol_//</p>
+        <ul class="w-full space-y-4">
+          <li>
+            <a
+              href="#"
+              class="text-muted-foreground hover:text-foreground inline-block font-mono text-[11px] tracking-widest uppercase"
+              >Terms_of_Service</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="text-muted-foreground hover:text-foreground inline-block font-mono text-[11px] tracking-widest uppercase"
+              >Privacy_Encryption</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="text-muted-foreground hover:text-foreground inline-block font-mono text-[11px] tracking-widest uppercase"
+              >Shipping_Logistics</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex w-full flex-col items-center space-y-6 text-center">
+        <p class="text-primary font-mono text-[10px] tracking-[0.4em] uppercase">Newsletter_Uplink_//</p>
+        <div class="mx-auto w-full max-w-[260px]">
+          <input
+            type="email"
+            placeholder="ENTER_EMAIL"
+            class="focus:border-primary w-full border border-white/10 bg-white/[0.03] px-4 py-3 text-center font-mono text-[10px] text-white/90 transition-colors focus:outline-none"
+          >
+          <button class="text-primary mt-4 w-full font-mono text-[10px] tracking-[0.3em] uppercase transition-all hover:text-white">
+            [ JOIN_TRANSMISSION ]
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full flex-col items-center justify-center gap-8 border-t border-white/5 pt-12 text-center">
+      <div class="flex w-full justify-center gap-12">
+        <a
+          href="#"
+          class="text-muted-foreground hover:text-primary font-mono text-[9px] tracking-widest uppercase transition-colors"
+          >Instagram</a
+        >
+        <a
+          href="#"
+          class="text-muted-foreground hover:text-primary font-mono text-[9px] tracking-widest uppercase transition-colors"
+          >X_Comm</a
+        >
+        <a
+          href="#"
+          class="text-muted-foreground hover:text-primary font-mono text-[9px] tracking-widest uppercase transition-colors"
+          >Discord</a
+        >
+      </div>
+
+      <div class="w-full space-y-4">
+        <p class="text-muted-foreground font-mono text-[9px] tracking-[0.2em] uppercase">
+          &copy; {{ 'now' | date: '%Y' }} THE_THEME_LABS. All Rights Reserved.
+        </p>
+        <p class="font-mono text-[8px] tracking-[0.4em] text-white/20 uppercase">
+          Ver: 1.0.4 // Lat: 7.2245 N // Long: 124.2429 E
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

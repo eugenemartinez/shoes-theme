@@ -1,0 +1,53 @@
+<section
+  id="showcase-{{ section.id }}"
+  class="bg-background border-border relative min-h-screen w-full overflow-hidden border-b"
+>
+  <div class="absolute top-12 left-8 z-30">
+    <p class="text-primary font-mono text-[10px] tracking-[0.5em] uppercase">The_Collection</p>
+    <h2 class="text-foreground font-headline text-4xl font-black tracking-tighter uppercase italic lg:text-5xl">
+      Archive <span class="text-transparent" style="-webkit-text-stroke: 1.5px var(--foreground);">001-007</span>
+    </h2>
+  </div>
+
+  <div class="product-track flex h-screen min-w-max items-center will-change-transform">
+    <div class="w-[65vw] flex-none"></div>
+
+    {% assign hero_images = 'hero-main.png,hero-two.png,hero-three.png,hero-four.png,hero-five.png,hero-six.png,hero-seven.png'
+      | split: ','
+    %}
+
+    {% for img in hero_images %}
+      <div class="product-card group relative z-10 flex shrink-0 -translate-x-1/2 cursor-pointer flex-col items-center px-[5vw]">
+        <div
+          class="bg-primary/5 absolute inset-0 scale-75 rounded-full blur-[100px] transition-transform duration-700 group-hover:scale-125"
+        ></div>
+
+        <div class="relative w-[280px] lg:w-[480px]">
+          <img
+            src="{{ img | asset_url }}"
+            alt="Technical Silhouette"
+            class="h-auto w-full object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.4)] transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-6"
+          >
+        </div>
+
+        <div class="mt-12 translate-y-4 text-center opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+          <p class="text-primary font-mono text-[10px] tracking-widest uppercase">Model_v.0{{ forloop.index }}</p>
+          <h3 class="font-headline text-foreground text-3xl font-black tracking-tighter uppercase italic">
+            Silhouette_{{ forloop.index }}
+          </h3>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="flex-none"></div>
+  </div>
+
+  <div class="absolute right-8 bottom-12 z-30">
+    <div class="flex items-center justify-end gap-4">
+      <p class="text-muted-foreground font-mono text-[8px] tracking-widest uppercase">Scroll_to_Explore</p>
+      <div class="bg-border h-[1px] w-48 overflow-hidden">
+        <div id="showcase-progress" class="bg-primary h-full w-0"></div>
+      </div>
+    </div>
+  </div>
+</section>

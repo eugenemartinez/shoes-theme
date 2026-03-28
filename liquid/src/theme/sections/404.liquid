@@ -1,0 +1,63 @@
+<section
+  id="not-found-{{ section.id }}"
+  class="bg-background relative flex min-h-screen w-full items-center justify-center overflow-hidden"
+>
+  <div class="absolute inset-0 z-0">
+    <div
+      class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--primary)_0%,_transparent_65%)] opacity-[0.03]"
+    ></div>
+    <div class="bg-grid-texture pointer-events-none absolute inset-0 opacity-10"></div>
+  </div>
+
+  <div class="relative z-10 flex w-full flex-col items-center justify-center px-6 text-center">
+    <div
+      class="flex flex-col items-center"
+      data-gsap="fade-up"
+      data-scroll="true"
+      data-delay="0.2"
+    >
+      <div class="mb-10 flex items-center justify-center gap-4">
+        <span class="h-[1px] w-8 bg-red-500/40"></span>
+        <p class="animate-pulse font-mono text-[10px] tracking-[0.6em] text-red-500 uppercase">Error_Code: 404</p>
+        <span class="h-[1px] w-8 bg-red-500/40"></span>
+      </div>
+
+      <h1 class="text-foreground font-headline pb-4 text-[12vw] leading-[0.85] font-black tracking-tighter uppercase italic lg:text-[8vw]">
+        Signal <br>
+        <span class="mt-2 block text-transparent" style="-webkit-text-stroke: 1.5px var(--foreground);"
+          >Fragmented</span
+        >
+      </h1>
+
+      <div class="border-foreground/10 mt-12 max-w-md border bg-white/[0.02] p-8 backdrop-blur-sm">
+        <p
+          class="text-primary typewriter-cursor mb-4 flex items-center justify-center gap-2 font-mono text-[10px] tracking-widest uppercase"
+          data-gsap="typewriter"
+        >
+          <span class="bg-primary h-1 w-1"></span> Diagnostic_Report //
+        </p>
+        <p
+          class="text-muted-foreground typewriter-cursor font-mono text-[10px] leading-relaxed tracking-tight uppercase"
+          data-gsap="typewriter"
+        >
+          The requested coordinate does not exist in the Archive.<br>
+          Packet loss detected. Connection terminated by host.
+        </p>
+      </div>
+
+      <div class="mt-14 pt-6">
+        <a
+          href="/"
+          class="bg-primary text-background group relative inline-flex items-center gap-4 px-12 py-5 font-mono text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:bg-white"
+        >
+          Re-Establish_Uplink
+          <span class="transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-10 left-10 opacity-30">
+    <p class="font-mono text-[8px] tracking-widest text-white uppercase">Protocol: Fail_Safe // Ver: 1.0.4</p>
+  </div>
+</section>

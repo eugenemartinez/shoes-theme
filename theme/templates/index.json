@@ -1,0 +1,46 @@
+{
+	"sections": {
+		"hero": {
+			"type": "hero",
+			"settings": {}
+		},
+		"brand-ticker": {
+			"type": "brand-ticker",
+			"settings": {}
+		},
+		"split-manifesto": {
+			"type": "split-manifesto",
+			"settings": {}
+		},
+		"technical-specs": {
+			"type": "technical-specs",
+			"settings": {}
+		},
+		"product-showcase": {
+			"type": "product-showcase",
+			"settings": {}
+		},
+		"lookbook": {
+			"type": "lookbook",
+			"settings": {}
+		},
+		"technical-accordion": {
+			"type": "technical-accordion",
+			"settings": {}
+		},
+		"centered-cta": {
+			"type": "centered-cta",
+			"settings": {}
+		}
+	},
+	"order": [
+		"hero",
+		"brand-ticker",
+		"split-manifesto",
+		"technical-specs",
+		"product-showcase",
+		"lookbook",
+		"technical-accordion",
+		"centered-cta"
+	]
+}
