@@ -1,13 +1,20 @@
-import React from "react";
+import { React, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useCart } from "@components/context/CartContext";
+import DemoEndModal from "./DemoEndModal";
 
 const MainCart = () => {
 	// ── Context ──────────────────────────────────────
 	const { cart, updateQty, removeItem } = useCart();
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const isEmpty = !cart || cart.items.length === 0;
+
+	const handleCheckout = () => {
+		// You can add logic here (like a small delay or sound effect)
+		setIsModalOpen(true);
+	};
 
 	// ── Helper for currency formatting ──────────────
 	const formatPrice = (price) => {
@@ -172,6 +179,7 @@ const MainCart = () => {
 							</div>
 
 							<button
+								onClick={handleCheckout}
 								className="flex relative gap-3 justify-center items-center py-5 w-full font-mono font-bold uppercase transition-all duration-300 cursor-pointer group text-[11px] tracking-[0.2em] bg-primary text-background"
 								style={{
 									clipPath: "polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%)",
@@ -182,6 +190,12 @@ const MainCart = () => {
 									→
 								</span>
 							</button>
+
+							{/* ── RENDER MODAL ── */}
+							<DemoEndModal
+								isOpen={isModalOpen}
+								onClose={() => setIsModalOpen(false)}
+							/>
 
 							<Link
 								to="/collections"
